@@ -1,0 +1,5 @@
+# Google competitions
+
+## codeJam
+
+## KickStart
