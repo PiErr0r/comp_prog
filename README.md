@@ -1,5 +1,2 @@
-# Google competitions
+# Competitive programming
 
-## codeJam
-
-## KickStart
