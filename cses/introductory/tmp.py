@@ -1,26 +1,15 @@
-from math import inf
+import sys
+s = ""
+
+for i in range(1000000):
+    s += str(i)
+
 n = int(input())
 
-a = []
-sums = [0]
-suma = 0
-a = list(map(int, input().split(' ')))
-for i in a:
-    suma += i
-
-for i in a:
-    sz = len(sums)
-    for j in range(sz):
-        if sums[j] == i:
-            continue
-        sums.append(sums[j] + i)
-
-sums = set(sums)
-mn = inf
-for s in sums:
-    tmp = abs(suma - s - s)
-    if tmp < mn:
-        mn = tmp
-
-
-print(mn)
+for i in range(n):
+    curr = int(input())
+    mn = max(0, curr - 5)
+    mx = min(len(s)-1, curr + 5)
+    print(len(s), curr)
+#    print(s[mn:mx], file = sys.stderr)
+    print(s[curr])
