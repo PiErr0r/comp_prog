@@ -42,9 +42,5 @@ using ll = long long;
 int main(void) {
   cin.tie(0)->sync_with_stdio(0);
 
-  int a = 10;
-
-  debug() << imie(a);
-
   return 0;
 }
