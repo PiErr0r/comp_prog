@@ -36,18 +36,35 @@ sim dor(const c&) { ris; }
 };
 #define imie(...) " [" << #__VA_ARGS__ ": " << (__VA_ARGS__) << "] "
 
-const int mod = 1'000'000'007;
-template <typename T>
-T m_add(T a, T b){ return (a+b)%mod; }
-T m_sub(T a, T b){ return ((a-b)%mod+mod)%mod; }
-T m_mul(T a, T b){ return (a*b)%mod; }
-
 using ll = long long;
+const int mod = 1'000'000'007;
 
 void solve(void) {
 
-  
-
+  int n;
+  string s;
+  cin >> n >> s;
+  int L = 0, R = 0;
+  bool isL = s[0] != 'O';
+  bool isR = s[0] != 'X';
+  L = !isL;
+  R = !isR;
+  // 0: F, X
+  // 1: F, O
+  for (int i = 1; i < n; ++i) {
+    if (isL && s[i] == 'O') {
+      ++L; isL = !isL;
+    } else if (!isL && s[i] == 'X') {
+      ++L; isL = !isL;
+    }
+    if (isR && s[i] == 'X') {
+      ++R; isR = !isR;
+    } else if (!isR && s[i] == 'O') {
+      ++R; isR = !isR;
+    }
+    debug() << imie(L) << imie(R);
+  }
+  cout << min(L, R);
 }
 
 int main(void) {

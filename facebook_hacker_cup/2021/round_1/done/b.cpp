@@ -36,18 +36,39 @@ sim dor(const c&) { ris; }
 };
 #define imie(...) " [" << #__VA_ARGS__ ": " << (__VA_ARGS__) << "] "
 
-const int mod = 1'000'000'007;
-template <typename T>
-T m_add(T a, T b){ return (a+b)%mod; }
-T m_sub(T a, T b){ return ((a-b)%mod+mod)%mod; }
-T m_mul(T a, T b){ return (a*b)%mod; }
-
 using ll = long long;
+const int mod = 1'000'000'007;
 
 void solve(void) {
 
-  
+  int n, m, a, b;
+  cin >> n >> m >> a >> b;
+  int len = n + m - 1;
+  if (a < len || b < len) {
+    cout << "Impossible";
+    return;
+  }
 
+  cout << "Possible" << endl;
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < m; ++j) {
+      if (i == 0) {
+        cout << 1;
+      } else if (i != n - 1 && (j == 0 || j == m - 1)) {
+        cout << 1;
+      } else if (i == n - 1 && (j == 0 || j == m - 1)) {
+        if (j == 0) {
+          cout << (b - len + 1);
+        } else {
+          cout << (a - len + 1);
+        }
+      } else {
+        cout << 1000;
+      }
+      if (j != m - 1) cout << " ";
+    }
+    if (i != n - 1) cout << endl;
+  }
 }
 
 int main(void) {
