@@ -116,7 +116,7 @@ void solve_old2(void) {
     cout << endl;
 }
 
-void solve(void) {
+void solve_old3(void) {
     int n, k;
     cin >> n >> k;
     int i = 1, ans = 0;
@@ -126,6 +126,34 @@ void solve(void) {
         ++i;
     }
     cout << ans << endl;
+}
+
+void solve(void) {
+  int n;
+  ll k;
+  cin >> n >> k;
+  if (n == 1) {
+    cout << 1 << endl;
+    return;
+  }
+  set<int> C;
+  for (int i = 0; i < n; ++i) C.insert(i + 1);
+  auto curr = C.begin();
+  int cv = *curr;
+  while ((int)C.size() != 0) {
+    ll l = C.size();
+    ll nn = (cv + k) % l;
+    cout << "N " << nn << " " << cv << " " << l << " " << k << endl;
+    auto it = C.lower_bound(nn);
+    if (it == C.end()) it = C.begin();
+    curr = it;
+    advance(curr, 1);
+    if (curr == C.end()) curr = C.begin();
+    cout << *it << " ";
+    C.erase(it);
+    cv = *curr;
+  }
+  cout << endl;
 }
 
 int main(void) {
