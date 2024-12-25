@@ -70,6 +70,43 @@ function part2(data) {
 	return;
 }
 
+const bfsFill = (G, starts, F) => {
+	iter(starts, ([sy, sx]) => {
+		const q = new Queue();
+		q.push([sy, sx, 0]);
+		const seen = new set();
+		while (!q.empty()) {
+			const [y, x, t] = q.pop();
+			if (seen.has([y, x])) continue;
+			seen.add([y, x]);
+			F[y][x] += t;
+			iter(D4, ([dy, dx]) => {
+				if (!inBB(y+dy, x+dx, G)) return;
+				if (G[y+dy][x+dx] === '#') return;
+				q.push([y+dy, x+dx, t+1]);
+			})
+		}
+	});
+
+	let mn = MOD * 1000, mns = [];
+	iter(F, (r, i) => {
+		iter(r, (c, j) => {
+			if (G[i][j] !== '.') return;
+			if (c < mn) {
+				mn = c;
+				mns = [[i, j]];
+			} else if (c === mn) {
+				mns.push([i, j]);
+			}
+		})
+	});
+	let mnres = MOD * 1000;
+	iter(mns, ([mny, mnx]) => {
+		mnres = min(mnres, bfs(G, [[mny, mnx]], true))
+	})
+	return mnres
+}
+
 function part3(data) {
 
 	let res = 0;
@@ -77,15 +114,13 @@ function part3(data) {
 	const P = [];
 	iter(data, (r, i) => {
 		iter(r, (c, j) => {
-			if (c === '.') P.push([i, j]);
+			// if (c === '.') P.push([i, j]);
+			if (c === 'P') P.push([i, j]);
 		})
 	})
 
-	res = MOD * 1000
-	iter(P, ([py, px], i) => {
-		debug(i, '/', P.length, res)
-		res = min(res, bfs(data, [[py, px]], true));
-	})
+	const G = empty(data.length, data[0].length)
+	res = bfsFill(data, P, G);
 
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
