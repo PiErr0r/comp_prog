@@ -77,9 +77,6 @@ ANSWER: 917-288-9635
 
 ```
 select * from (
-select tmp2.*, noi.sku from (
-select tmp1.*, no2.orderid from (
-select * from (
 	select
 		  customerid
 		, "name"
@@ -94,16 +91,30 @@ select * from (
 where mod(2023 - (date_part('year', bdate) :: int), 12) = 0
 and (date_part('month', bdate) = 6 and date_part('day', bdate) >= 20 or
 	 date_part('month', bdate) = 7 and date_part('day', bdate) < 22)
-) tmp1
-left join noahs_orders no2
-on tmp1.customerid = no2.customerid
-) tmp2
-left join noahs_orders_items noi
-on tmp2.orderid = noi.orderid
-) tmp3
-left join noahs_products np
-on tmp3.sku = np.sku
-where tmp3.citystatezip = 'Jamaica, NY 11435'
-order by customerid
+and citystatezip = 'Jamaica, NY 11435'
 
+```
+
+## 4
+
+ANSWER: 607-231-3605
+
+```
+select tmp3.* from (
+	select tmp2.*, noi.sku from (
+		select tmp.*, no2.orderid, to_timestamp(no2.ordered, 'YYYY-MM-DD HH24:MI:SS') as ordered from (
+			select * from noahs_customers nc
+		) as tmp
+		left join noahs_orders no2
+		on tmp.customerid = no2.customerid
+	) as tmp2
+left join noahs_orders_items noi
+on noi.orderid = tmp2.orderid
+where
+	date_part('hour', tmp2.ordered) < 5
+and date_part('hour', tmp2.ordered) > 3
+and noi.sku like 'BKY%'
+and date_part('year', to_date(tmp2.birthdate, 'YYYY-MM-DD')) > 1990 
+) as tmp3
+order by customerid
 ```
