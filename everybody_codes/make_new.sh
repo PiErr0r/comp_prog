@@ -11,4 +11,3 @@ echo "" >> "$1".js;
 
 touch "$1"{a,b,c}_input;
 mv "$1"* "$2"*
-subl "$2"*/"$1"*;
