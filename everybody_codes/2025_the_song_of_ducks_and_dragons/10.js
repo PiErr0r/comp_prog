@@ -168,9 +168,107 @@ function part2(data) {
 	return;
 }
 
+const CACHE = {}
+const ROWS = 'ABCDEFGH'
+const COLS = '12345678'
+
+function get_hash(D, S, w, move) {
+    let s = `${move}!${D[0]}:${D[1]}_`
+    const SS = [...S].sort(([y0, x0], [y1, x1]) => x0 - x1);
+    let i = 0;
+    while (SS.length < w) {
+        if (i >= SS.length) {
+            SS.push(['X', i])
+        }
+        if (SS[i][1] !== i) {
+            SS.splice(i, 0, ['X', i])
+        }
+        ++i
+    }
+    console.assert(SS.length === w)
+    s += SS.map(([y, _x]) => y + "").join("-")
+    return s
+}
+
+function dfs(h, w, D, S, H, move, path) {
+    if (S.size === 0) {
+        debug(path)
+        return 1;
+    }
+    const hash = get_hash(D, S, w, move);
+    if (hash in CACHE) return CACHE[hash]
+    const nmove = move === 's' ? 'd' : 's';
+    let res = 0;
+    if (move === 's') {
+        let found = false;
+        iter([...S], ([y, x]) => {
+            if (D[0] === y + 1 && D[1] === x && !H.has([y+1, x])) {
+                return;
+            }
+            if (y + 1 === h) {
+                found = true;
+                return;
+            }
+            S.delete([y, x])
+            S.add([y+1, x]);
+            const tmp = dfs(h, w, D, S, H, nmove, [...path, `S>${ROWS[x]}${COLS[y+1]}`])
+            res += tmp;
+            S.delete([y+1, x]);
+            S.add([y, x]);
+            found = true;
+        })
+        if (!found) {
+            res += dfs(h, w, D, S, H, nmove, path)
+        }
+    } else {
+        const moves = getMoves2(...D, h, w);
+        iter([...moves], (move) => {
+            let tmp = null;
+            if (S.has(move) && !H.has(move)) {
+                tmp = move
+                S.delete(move)
+            }
+            const score = dfs(h, w, move, S, H, nmove, [...path, `D>${ROWS[move[1]]}${COLS[move[0]]}`])
+            res += score;
+            if (tmp) {
+                S.add(tmp)
+            }
+        })
+    }
+    CACHE[hash] = res;
+    if (false && res > 0) {
+        debug(hash)
+        debug(CACHE[hash])
+    }
+    return res;
+}
+
 function part3(data) {
 
 	let res = 0;
+	data = table(data.trim());
+	const H = new set();
+	const S = new set();
+	let D = null;
+	iter(data, (r, ri) => {
+		iter(r, (c, ci) => {
+			switch (c) {
+			case '#':
+				H.add([ri, ci]);
+				break;
+			case 'S':
+				S.add([ri, ci]);
+				break;
+			case 'D':
+				D = [ri, ci];
+				break;
+			}
+		})
+	})
+	const h = data.length;
+	const w = data[0].length;
+
+    res = dfs(h, w, D, S, H, 's', [])
 
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
