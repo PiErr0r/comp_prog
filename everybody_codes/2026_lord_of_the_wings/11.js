@@ -149,16 +149,14 @@ function part3(data) {
     })
 
     let mx = 0;
-    debug(S)
+    const B = [0, 0, 1, 1, 2, 2, 3, 3];
+    const perms = [...new set(unique_permutations(B).map(perm => to_indices(perm)).map(r => r.sort((a, b) => a[0]-b[0])))]
     range(floor(ps / 8))(i => {
-        debug(i)
         const A = empty(8).map((_, j) => i + floor(ps / 8)*j)
-        const B = [0, 0, 1, 1, 2, 2, 3, 3];
-        const perms = unique_permutations(B)
+
         iter(perms, perm => {
             const cP = copy([P])[0]
-            const mapping = to_indices(perm)
-            iter(mapping, ([a, b]) => {
+            iter(perm, ([a, b]) => {
                 cP[A[a]].push(A[b])
                 cP[A[b]].push(A[a])
             })
