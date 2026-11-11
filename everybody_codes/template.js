@@ -46,9 +46,9 @@ function part3(data) {
 }
 
 function main(n) {
-	part1(fs.readFileSync(`${n}a_input`).toString("utf-8"));
-	part2(fs.readFileSync(`${n}b_input`).toString("utf-8"));
-	part3(fs.readFileSync(`${n}c_input`).toString("utf-8"));
+	part1(fs.readFileSync(`${n}a_input`).toString("utf-8").trim());
+	part2(fs.readFileSync(`${n}b_input`).toString("utf-8").trim());
+	part3(fs.readFileSync(`${n}c_input`).toString("utf-8").trim());
 	process.exit(0);
 }
 
