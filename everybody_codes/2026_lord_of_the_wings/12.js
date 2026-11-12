@@ -15,46 +15,6 @@ const { min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, 
 const { disjoint, isSubset, isSuperset, or, and, xor, sub } = set;
 const { combinations, combinations_with_replacement, next_permutation, product, unique_permutations } = require("../../../aoc/lib");
 
-function find_rects(D) {
-    const R = []
-    iter(D, (row, y) => {
-        iter(row, (col, x) => {
-            if (col === '#') {
-                let ty = y, tx = x;
-                let w, h;
-                while (ty < D.length && D[ty][tx] === '#') {
-                    while (tx < D[0].length && D[ty][tx] === '#') {
-                        D[ty][tx] = '.';
-                        ++tx;
-                    }
-                    w = tx - x;
-                    tx = x;
-                    ++ty;
-                }
-                h = ty - y;
-                R.push([y, x, h, w]);
-            }
-        })
-    })
-    return R;
-}
-
-function part1(data) {
-
-	let res = 0;
-    data = table(data)
-    const R = find_rects(data);
-
-    iter(R, ([y0, x0, h, w]) => {
-        res += min(w, h);
-    })
-
-	debug(res);
-	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
-	console.log("END OF PART1");
-	return;
-}
-
 function bfs(data, y, x) {
     const q = new Queue()
     let mny = y, mxy = y, mnx = x, mxx = x;
@@ -132,30 +92,6 @@ function find_inflection(B, y0, x0, w, h) {
     return [yi + dy, xi + dx, dy, dx, false]
 }
 
-function part2(data) {
-
-	let res = 0;
-    data = table(data)
-    const bb = find_bbs(data);
-    iter(bb, ([y0, x0, h, w, B]) => {
-        const [yi, xi, dy, dx, is_rect] = find_inflection(B, y0, x0, w, h);
-        if (is_rect) {
-            const tmp = min(w, h)
-            res += tmp
-            return;
-        }
-        const yy = dy === -1 ? yi - y0 + 1 : y0 + h - yi
-        const xx = dx === -1 ? xi - x0 + 1 : x0 + w - xi
-        const tmp = min(min(w, h), yy + xx)
-        res += tmp
-    })
-
-	debug(res);
-	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
-	console.log("END OF PART2");
-	return;
-}
-
 function split_h(by, bx, bh, bw, sy, sx, sh, sw) {
     return [
         [by, bx, sy - by, bw],
@@ -196,8 +132,7 @@ function hollow_rect(y0, x0, h, w, B) {
     );
 }
 
-function part3(data) {
-
+function solve(data) {
 	let res = 0;
     data = table(data)
     const bb = find_bbs(data);
@@ -218,7 +153,30 @@ function part3(data) {
         const tmp = min(min(w, h), yy + xx)
         res += tmp
     })
+    return res;
+}
 
+function part1(data) {
+
+	let res = solve(data)
+	debug(res);
+	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
+	console.log("END OF PART1");
+	return;
+}
+
+function part2(data) {
+
+	let res = solve(data)
+	debug(res);
+	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
+	console.log("END OF PART2");
+	return;
+}
+
+function part3(data) {
+
+	let res = solve(data);
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART3");
