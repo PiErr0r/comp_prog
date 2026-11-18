@@ -10,4 +10,4 @@ echo "main('$1');" >> "$1.js";
 echo "" >> "$1".js;
 
 touch "$1"{a,b,c}_input;
-mv "$1"* "$2"*
+mv "${1}.js" "${1}"{a,b,c}_input "$2"*
